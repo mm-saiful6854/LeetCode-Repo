@@ -1,32 +1,19 @@
 class Solution {
     public long countSubarrays(int[] nums, int k) {
-        //find the max element
-        int mx=-1;
-        for(int n: nums) mx = Math.max(mx, n);
-
-        //find the mx element and track the index by frequency in map
-        int[] freq = new int[nums.length];
-        HashMap<Integer,Integer> freqToIndex = new HashMap<>();
-        int cnt=0;
-        for(int i=0;i<nums.length;i++){
-            if(nums[i] == mx) {
-                cnt++;
-                freqToIndex.put(cnt, i);
-            }
-            freq[i]= cnt;
-        }
+        //another approach: two pointer
+        int mx =0;
+        for(int n:nums) mx = Math.max(mx, n);
         
-
-        //calculate the subarrays
+        int cnt=0,left=0;
         long ans=0;
         for(int i=0;i<nums.length;i++){
-            if(freq[i]>=k){
-                int r = freq[i]-(k-1);
-                int idx = freqToIndex.getOrDefault(r,-1);
-                if(idx>=0){
-                    ans+=(idx+1);
-                }
+            if(nums[i]==mx) cnt++;
+            
+            while(cnt==k){
+                if(nums[left]==mx) cnt--;
+                left++;
             }
+            ans+=left;
         }
         return ans;
     }
